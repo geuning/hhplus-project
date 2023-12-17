@@ -21,15 +21,13 @@ public class PlaceSearchController {
 
     @GetMapping("/search")
     public ResponseEntity<List<PlaceSearchResponseDto>> searchPlace(@RequestParam(value = "keyword") String keyword){
-//        List<PlaceSearchResponseDto> placeSearchResponseDtos = placeSearchService.searchPlace(keyword);
-//        return ResponseEntity.ok(placeSearchResponseDtos);
-        return null;
+        List<PlaceSearchResponseDto> placeSearchResponseDtos = placeSearchService.searchPlace(keyword);
+        return ResponseEntity.ok(placeSearchResponseDtos);
     }
 
     @GetMapping("/popular-keyword")
     public ResponseEntity<List<PopularSearchKeywordResponseDto>> searchPopularKeyword(){
-//        List<PopularSearchKeywordResponseDto> popularSearchKeywordResponseDtos = placeSearchService.searchPopularKeyword();
-//        return ResponseEntity.ok(popularSearchKeywordResponseDtos);
-        return null;
+        List<PopularSearchKeywordResponseDto> popularSearchKeywordResponseDtos = placeSearchService.searchPopularKeyword();
+        return ResponseEntity.ok(popularSearchKeywordResponseDtos);
     }
 }
