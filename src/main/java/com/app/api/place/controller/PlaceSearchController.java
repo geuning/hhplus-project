@@ -1,6 +1,6 @@
 package com.app.api.place.controller;
 
-import com.app.api.place.dto.PlaceSearchResponseDto;
+import com.app.api.place.dto.PlaceSearchApiResponseDto;
 import com.app.api.place.dto.PopularSearchKeywordResponseDto;
 import com.app.api.place.service.PlaceSearchService;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +20,12 @@ public class PlaceSearchController {
     private final PlaceSearchService placeSearchService;
 
     @GetMapping("/search")
-    public ResponseEntity<List<PlaceSearchResponseDto>> searchPlace(
+    public ResponseEntity<List<PlaceSearchApiResponseDto>> searchPlace(
             @RequestParam(value = "keyword") String keyword,
             @RequestParam(value = "sort") String sort,
             @RequestParam(value = "nextToken") Long nextToken){
-        List<PlaceSearchResponseDto> placeSearchResponseDtos = placeSearchService.searchPlace(keyword, sort, nextToken);
-        return ResponseEntity.ok(placeSearchResponseDtos);
+        List<PlaceSearchApiResponseDto> placeSearchApiResponseDtos = placeSearchService.searchPlace(keyword, sort, nextToken);
+        return ResponseEntity.ok(placeSearchApiResponseDtos);
     }
 
     @GetMapping("/popular-keyword")

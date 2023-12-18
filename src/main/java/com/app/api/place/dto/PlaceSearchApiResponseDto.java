@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaceSearchResponseDto {
+public class PlaceSearchApiResponseDto {
 
     private Long nextToken;
     private Boolean hasNext;
