@@ -1,16 +1,16 @@
 package com.app.domain.place.entity;
 
 import com.app.domain.common.BaseEntity;
-import com.app.domain.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Place extends BaseEntity {
+public class SearchKeyword extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,15 @@ public class Place extends BaseEntity {
     private String keyword;
 
     private Long searchCount;
+
+    @Builder
+    public SearchKeyword(Long searchKeywordId, String keyword, Long searchCount){
+        this.searchKeywordId = searchKeywordId;
+        this.keyword = keyword;
+        this.searchCount = searchCount;
+    }
+
+
 
 
 }

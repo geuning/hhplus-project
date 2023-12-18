@@ -1,4 +1,4 @@
 package com.app.domain.place.service;
 
-public interface PlaceSearchService {
+public class SearchKeywordService {
 }
