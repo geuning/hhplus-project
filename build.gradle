@@ -32,6 +32,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
 	implementation'org.mariadb.jdbc:mariadb-java-client:3.1.2'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	runtimeOnly 'com.h2database:h2'

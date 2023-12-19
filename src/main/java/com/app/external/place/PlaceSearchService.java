@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface PlaceSearchService {
 
-    List<PlaceSearchResponseDto> searchPlaceWithKeyword(String keyword);
+    List<PlaceSearchResponseDto> searchPlaceWithKeyword(String keyword, int page, int size);
 }
