@@ -1,4 +1,4 @@
-package com.app.domain.place.service;
-
-public class SearchKeywordService {
-}
+//package com.app.domain.place.service;
+//
+//public class SearchKeywordService {
+//}

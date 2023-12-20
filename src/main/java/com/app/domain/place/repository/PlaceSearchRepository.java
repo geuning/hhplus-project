@@ -1,4 +1,4 @@
-package com.app.domain.place.repository;
-
-public interface PlaceSearchRepository {
-}
+//package com.app.domain.place.repository;
+//
+//public interface PlaceSearchRepository {
+//}
