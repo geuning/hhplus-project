@@ -31,30 +31,42 @@ public class NaverLocalServiceImpl implements PlaceSearchService {
     }
 
     // TODO: sort 분기처리 , 파라미터 sort추가, 빈값일때 빈리스트 보내주기, 서비스에서 받아서 네이번지 카카온지 어케알수있으까
-    @Override
     public List<PlaceSearchResponseDto> searchPlaceWithKeyword(String keyword, int page, int size, String sort) {
-        NaverSearchKeywordDto.Request request = NaverSearchKeywordDto.Request.builder()
-                .query(keyword)
-                .start(page)
-                .display(size)
-                .build();
+        if("accuracy".equals(sort)){
+            NaverSearchKeywordDto.Request request1 = NaverSearchKeywordDto.Request.builder()
+                    .query(keyword)
+                    .start(page)
+                    .display(size)
+                    .sort(NaverPlaceSearchOrder.정확도순.getValue())
+                    .build();
 
-        if ("accuracy".equals(sort)) {
-            request.builder().sort(NaverPlaceSearchOrder.정확도순.getValue());
+            NaverSearchKeywordDto.Response response1 = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, request1);
+            return response1.getItems().stream()
+                    .map(it ->PlaceSearchResponseDto.builder()
+                            .placeName(it.getTitle())
+                            .phoneNumber(it.getTelephone())
+                            .roadAddress(it.getRoadAddress())
+                            .placeExternalType(PlaceExternalType.NAVER)
+                            .build())
+                    .collect(Collectors.toList());
+
         } else {
-            request.builder().sort(NaverPlaceSearchOrder.인기순.getValue());
+            NaverSearchKeywordDto.Request request2 = NaverSearchKeywordDto.Request.builder()
+                    .query(keyword)
+                    .start(page)
+                    .display(size)
+                    .sort(NaverPlaceSearchOrder.인기순.getValue())
+                    .build();
+            NaverSearchKeywordDto.Response response2 = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, request2);
+
+            return response2.getItems().stream()
+                    .map(it ->PlaceSearchResponseDto.builder()
+                            .placeName(it.getTitle())
+                            .phoneNumber(it.getTelephone())
+                            .roadAddress(it.getRoadAddress())
+                            .placeExternalType(PlaceExternalType.NAVER)
+                            .build())
+                    .collect(Collectors.toList());
         }
-
-        NaverSearchKeywordDto.Response response = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, request);
-
-
-        return response.getItems().stream()
-                .map(it ->PlaceSearchResponseDto.builder()
-                        .placeName(it.getTitle())
-                        .phoneNumber(it.getTelephone())
-                        .roadAddress(it.getRoadAddress())
-                        .placeExternalType(PlaceExternalType.NAVER)
-                        .build())
-                .collect(Collectors.toList());
     }
 }

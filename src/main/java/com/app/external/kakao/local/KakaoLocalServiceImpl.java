@@ -26,29 +26,44 @@ public class KakaoLocalServiceImpl implements PlaceSearchService {
         return placeExternalType == PlaceExternalType.KAKAO;
     }
 
-    @Override
     public List<PlaceSearchResponseDto> searchPlaceWithKeyword(String keyword, int page, int size, String sort){
-        KakaoSearchKeywordDto.Request request = KakaoSearchKeywordDto.Request.builder()
-                .query(keyword)
-                .page(page)
-                .size(size)
-                .build();
+        if("accuracy".equals(sort)){
+            KakaoSearchKeywordDto.Request request1 = KakaoSearchKeywordDto.Request.builder()
+                    .query(keyword)
+                    .page(page)
+                    .size(size)
+                    .sort(KakaoPlaceSearchOrder.정확도순.getValue())
+                    .build();
 
-        if ("accuracy".equals(sort)) {
-            request.builder().sort(KakaoPlaceSearchOrder.정확도순.getValue());
-        } else {
-            request.builder().sort(KakaoPlaceSearchOrder.거리순.getValue());
+            KakaoSearchKeywordDto.Response response1 = kakaoLocalClient.searchPlaceWithKeyword(PREFIX_AUTHORIZATION + kakaoClientId, request1);
+            return response1.getDocuments().stream()
+                    .map(it -> PlaceSearchResponseDto.builder()
+                            .placeName(it.getPlaceName())
+                            .phoneNumber(it.getPhone())
+                            .roadAddress(it.getRoadAddressName())
+                            .placeExternalType(PlaceExternalType.KAKAO)
+                            .build())
+                    .collect(Collectors.toList());
+
+        } else{
+            KakaoSearchKeywordDto.Request request2 = KakaoSearchKeywordDto.Request.builder()
+                    .query(keyword)
+                    .page(page)
+                    .size(size)
+                    .sort(KakaoPlaceSearchOrder.거리순.getValue())
+                    .build();
+
+
+            KakaoSearchKeywordDto.Response response2 = kakaoLocalClient.searchPlaceWithKeyword(PREFIX_AUTHORIZATION + kakaoClientId, request2);
+
+            return response2.getDocuments().stream()
+                    .map(it -> PlaceSearchResponseDto.builder()
+                            .placeName(it.getPlaceName())
+                            .phoneNumber(it.getPhone())
+                            .roadAddress(it.getRoadAddressName())
+                            .placeExternalType(PlaceExternalType.KAKAO)
+                            .build())
+                    .collect(Collectors.toList());
         }
-
-        KakaoSearchKeywordDto.Response response = kakaoLocalClient.searchPlaceWithKeyword(PREFIX_AUTHORIZATION + kakaoClientId, request);
-
-        return response.getDocuments().stream()
-                .map(it -> PlaceSearchResponseDto.builder()
-                        .placeName(it.getPlaceName())
-                        .phoneNumber(it.getPhone())
-                        .roadAddress(it.getRoadAddressName())
-                        .placeExternalType(PlaceExternalType.KAKAO)
-                        .build())
-                .collect(Collectors.toList());
     }
 }
