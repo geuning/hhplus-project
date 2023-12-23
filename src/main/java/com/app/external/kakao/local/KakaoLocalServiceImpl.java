@@ -26,17 +26,17 @@ public class KakaoLocalServiceImpl implements PlaceSearchService {
         return placeExternalType == PlaceExternalType.KAKAO;
     }
 
-    public List<PlaceSearchResponseDto> searchPlaceWithKeyword(String keyword, int page, int size, String sort){
+    public List<PlaceSearchResponseDto> searchPlaceWithKeyword(String keyword, int nextToken, int size, String sort){
         if("accuracy".equals(sort)){
-            KakaoSearchKeywordDto.Request request1 = KakaoSearchKeywordDto.Request.builder()
+            KakaoSearchKeywordDto.Request requestAccuracy = KakaoSearchKeywordDto.Request.builder()
                     .query(keyword)
-                    .page(page)
+                    .page(nextToken)
                     .size(size)
                     .sort(KakaoPlaceSearchOrder.정확도순.getValue())
                     .build();
 
-            KakaoSearchKeywordDto.Response response1 = kakaoLocalClient.searchPlaceWithKeyword(PREFIX_AUTHORIZATION + kakaoClientId, request1);
-            return response1.getDocuments().stream()
+            KakaoSearchKeywordDto.Response responseAccuracy = kakaoLocalClient.searchPlaceWithKeyword(PREFIX_AUTHORIZATION + kakaoClientId, requestAccuracy);
+            return responseAccuracy.getDocuments().stream()
                     .map(it -> PlaceSearchResponseDto.builder()
                             .placeName(it.getPlaceName())
                             .phoneNumber(it.getPhone())
@@ -46,17 +46,17 @@ public class KakaoLocalServiceImpl implements PlaceSearchService {
                     .collect(Collectors.toList());
 
         } else{
-            KakaoSearchKeywordDto.Request request2 = KakaoSearchKeywordDto.Request.builder()
+            KakaoSearchKeywordDto.Request requestDistance = KakaoSearchKeywordDto.Request.builder()
                     .query(keyword)
-                    .page(page)
+                    .page(nextToken)
                     .size(size)
                     .sort(KakaoPlaceSearchOrder.거리순.getValue())
                     .build();
 
 
-            KakaoSearchKeywordDto.Response response2 = kakaoLocalClient.searchPlaceWithKeyword(PREFIX_AUTHORIZATION + kakaoClientId, request2);
+            KakaoSearchKeywordDto.Response responseDistance = kakaoLocalClient.searchPlaceWithKeyword(PREFIX_AUTHORIZATION + kakaoClientId, requestDistance);
 
-            return response2.getDocuments().stream()
+            return responseDistance.getDocuments().stream()
                     .map(it -> PlaceSearchResponseDto.builder()
                             .placeName(it.getPlaceName())
                             .phoneNumber(it.getPhone())

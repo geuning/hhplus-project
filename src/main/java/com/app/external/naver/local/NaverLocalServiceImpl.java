@@ -31,17 +31,21 @@ public class NaverLocalServiceImpl implements PlaceSearchService {
     }
 
     // TODO: sort 분기처리 , 파라미터 sort추가, 빈값일때 빈리스트 보내주기, 서비스에서 받아서 네이번지 카카온지 어케알수있으까
-    public List<PlaceSearchResponseDto> searchPlaceWithKeyword(String keyword, int page, int size, String sort) {
+    public List<PlaceSearchResponseDto> searchPlaceWithKeyword(String keyword, int nextToken, int size, String sort) {
         if("accuracy".equals(sort)){
-            NaverSearchKeywordDto.Request request1 = NaverSearchKeywordDto.Request.builder()
+            NaverSearchKeywordDto.Request requestAccuracy = NaverSearchKeywordDto.Request.builder()
                     .query(keyword)
-                    .start(page)
+                    .start(nextToken)
                     .display(size)
                     .sort(NaverPlaceSearchOrder.정확도순.getValue())
                     .build();
 
-            NaverSearchKeywordDto.Response response1 = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, request1);
-            return response1.getItems().stream()
+            NaverSearchKeywordDto.Response responseAccuracy = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, requestAccuracy);
+
+            responseAccuracy.getStart();
+
+
+            return responseAccuracy.getItems().stream()
                     .map(it ->PlaceSearchResponseDto.builder()
                             .placeName(it.getTitle())
                             .phoneNumber(it.getTelephone())
@@ -51,15 +55,15 @@ public class NaverLocalServiceImpl implements PlaceSearchService {
                     .collect(Collectors.toList());
 
         } else {
-            NaverSearchKeywordDto.Request request2 = NaverSearchKeywordDto.Request.builder()
+            NaverSearchKeywordDto.Request requestPopular = NaverSearchKeywordDto.Request.builder()
                     .query(keyword)
-                    .start(page)
+                    .start(nextToken)
                     .display(size)
                     .sort(NaverPlaceSearchOrder.인기순.getValue())
                     .build();
-            NaverSearchKeywordDto.Response response2 = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, request2);
+            NaverSearchKeywordDto.Response responsePopular = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, requestPopular);
 
-            return response2.getItems().stream()
+            return responsePopular.getItems().stream()
                     .map(it ->PlaceSearchResponseDto.builder()
                             .placeName(it.getTitle())
                             .phoneNumber(it.getTelephone())

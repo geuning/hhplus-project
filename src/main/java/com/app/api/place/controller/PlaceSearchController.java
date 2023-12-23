@@ -20,12 +20,12 @@ public class PlaceSearchController {
     private final PlaceSearchService placeSearchService;
 
     @GetMapping("/search")
-    public ResponseEntity<List<PlaceSearchApiResponseDto>> searchPlace(
+    public ResponseEntity<PlaceSearchApiResponseDto> searchPlace(
             @RequestParam(value = "keyword") String keyword,
             @RequestParam(value = "sort") String sort,
             @RequestParam(value = "nextToken") int nextToken){
-        List<PlaceSearchApiResponseDto> placeSearchApiResponseDtos = placeSearchService.searchPlace(keyword, sort, nextToken);
-        return ResponseEntity.ok(placeSearchApiResponseDtos);
+        PlaceSearchApiResponseDto placeSearchApiResponseDto = placeSearchService.searchPlace(keyword, sort, nextToken);
+        return ResponseEntity.ok(placeSearchApiResponseDto);
     }
 
     @GetMapping("/popular-keyword")

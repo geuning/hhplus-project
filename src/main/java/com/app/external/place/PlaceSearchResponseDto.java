@@ -13,5 +13,6 @@ public class PlaceSearchResponseDto {
     private String placeName;
     private String roadAddress;
     private String phoneNumber;
+    private int nextToken;
     private PlaceExternalType placeExternalType;
 }
