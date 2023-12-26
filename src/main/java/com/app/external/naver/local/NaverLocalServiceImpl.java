@@ -31,25 +31,24 @@ public class NaverLocalServiceImpl implements PlaceSearchService {
     }
 
     // TODO: sort 분기처리 , 파라미터 sort추가, 빈값일때 빈리스트 보내주기, 서비스에서 받아서 네이번지 카카온지 어케알수있으까
-    public List<PlaceSearchResponseDto> searchPlaceWithKeyword(String keyword, int nextToken, int size, String sort) {
+    public List<PlaceSearchResponseDto> searchPlaceWithKeyword(String keyword, int token, int size, String sort) {
         if("accuracy".equals(sort)){
             NaverSearchKeywordDto.Request requestAccuracy = NaverSearchKeywordDto.Request.builder()
                     .query(keyword)
-                    .start(nextToken)
+                    .start(token)
                     .display(size)
                     .sort(NaverPlaceSearchOrder.정확도순.getValue())
                     .build();
-
             NaverSearchKeywordDto.Response responseAccuracy = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, requestAccuracy);
 
-            responseAccuracy.getStart();
-
+            int nextToken = (int) (responseAccuracy.getStart() + responseAccuracy.getDisplay());
 
             return responseAccuracy.getItems().stream()
                     .map(it ->PlaceSearchResponseDto.builder()
                             .placeName(it.getTitle())
                             .phoneNumber(it.getTelephone())
                             .roadAddress(it.getRoadAddress())
+                            .nextToken(nextToken)
                             .placeExternalType(PlaceExternalType.NAVER)
                             .build())
                     .collect(Collectors.toList());
@@ -57,17 +56,20 @@ public class NaverLocalServiceImpl implements PlaceSearchService {
         } else {
             NaverSearchKeywordDto.Request requestPopular = NaverSearchKeywordDto.Request.builder()
                     .query(keyword)
-                    .start(nextToken)
+                    .start(token)
                     .display(size)
                     .sort(NaverPlaceSearchOrder.인기순.getValue())
                     .build();
             NaverSearchKeywordDto.Response responsePopular = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, requestPopular);
+
+            int nextToken = (int) (responsePopular.getStart() + responsePopular.getDisplay());
 
             return responsePopular.getItems().stream()
                     .map(it ->PlaceSearchResponseDto.builder()
                             .placeName(it.getTitle())
                             .phoneNumber(it.getTelephone())
                             .roadAddress(it.getRoadAddress())
+                            .nextToken(nextToken)
                             .placeExternalType(PlaceExternalType.NAVER)
                             .build())
                     .collect(Collectors.toList());

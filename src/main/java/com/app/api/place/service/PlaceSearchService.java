@@ -22,7 +22,7 @@ public class PlaceSearchService {
     private final PlaceMediator placeMediator;
 //    private final SearchKeywordService searchKeywordService;
 
-    public PlaceSearchApiResponseDto searchPlace(String keyword, String sort, int nextToken){
+    public PlaceSearchApiResponseDto searchPlace(String keyword, String sort, int token){
 
         validateKeyword(keyword);
 
@@ -31,7 +31,7 @@ public class PlaceSearchService {
         List<PlaceSearchResponseDto> placeSearchs = new ArrayList<>();
         // TODO: for 쓰지말고 워터폴 형태로
         for(PlaceExternalType placeExternalType : PlaceExternalType.values()){
-            List<PlaceSearchResponseDto> placeSearchResponseDtos = placeMediator.searchPlaceWithKeyword(placeExternalType, keyword, nextToken, size, sort);
+            List<PlaceSearchResponseDto> placeSearchResponseDtos = placeMediator.searchPlaceWithKeyword(placeExternalType, keyword, token, size, sort);
         }
 
         return null;

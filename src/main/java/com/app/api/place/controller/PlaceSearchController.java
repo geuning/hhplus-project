@@ -23,8 +23,8 @@ public class PlaceSearchController {
     public ResponseEntity<PlaceSearchApiResponseDto> searchPlace(
             @RequestParam(value = "keyword") String keyword,
             @RequestParam(value = "sort") String sort,
-            @RequestParam(value = "nextToken") int nextToken){
-        PlaceSearchApiResponseDto placeSearchApiResponseDto = placeSearchService.searchPlace(keyword, sort, nextToken);
+            @RequestParam(value = "token") int token){
+        PlaceSearchApiResponseDto placeSearchApiResponseDto = placeSearchService.searchPlace(keyword, sort, token);
         return ResponseEntity.ok(placeSearchApiResponseDto);
     }
 
