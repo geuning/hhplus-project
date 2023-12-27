@@ -34,19 +34,7 @@ public class KakaoLocalServiceImpl implements PlaceSearchService {
                     .size(size)
                     .sort(KakaoPlaceSearchOrder.정확도순.getValue())
                     .build();
-            KakaoSearchKeywordDto.Response responseAccuracy = kakaoLocalClient.searchPlaceWithKeyword(PREFIX_AUTHORIZATION + kakaoClientId, requestAccuracy);
-
-            int nextToken = token + size;
-
-            return responseAccuracy.getDocuments().stream()
-                    .map(it -> PlaceSearchResponseDto.builder()
-                            .placeName(it.getPlaceName())
-                            .phoneNumber(it.getPhone())
-                            .roadAddress(it.getRoadAddressName())
-                            .nextToken(nextToken)
-                            .placeExternalType(PlaceExternalType.KAKAO)
-                            .build())
-                    .collect(Collectors.toList());
+            return getPlaceSearchResponseDtos(token, size, requestAccuracy);
 
         } else{
             KakaoSearchKeywordDto.Request requestDistance = KakaoSearchKeywordDto.Request.builder()
@@ -56,19 +44,25 @@ public class KakaoLocalServiceImpl implements PlaceSearchService {
                     .sort(KakaoPlaceSearchOrder.거리순.getValue())
                     .build();
 
-            KakaoSearchKeywordDto.Response responseDistance = kakaoLocalClient.searchPlaceWithKeyword(PREFIX_AUTHORIZATION + kakaoClientId, requestDistance);
-
-            int nextToken = token + size;
-
-            return responseDistance.getDocuments().stream()
-                    .map(it -> PlaceSearchResponseDto.builder()
-                            .placeName(it.getPlaceName())
-                            .phoneNumber(it.getPhone())
-                            .roadAddress(it.getRoadAddressName())
-                            .nextToken(nextToken)
-                            .placeExternalType(PlaceExternalType.KAKAO)
-                            .build())
-                    .collect(Collectors.toList());
+            return getPlaceSearchResponseDtos(token, size, requestDistance);
         }
+    }
+
+    private List<PlaceSearchResponseDto> getPlaceSearchResponseDtos(int token, int size, KakaoSearchKeywordDto.Request requestAccuracy) {
+        KakaoSearchKeywordDto.Response responseAccuracy = kakaoLocalClient.searchPlaceWithKeyword(PREFIX_AUTHORIZATION + kakaoClientId, requestAccuracy);
+
+        int nextToken = token + size;
+        Boolean hasNext = !responseAccuracy.getMeta().getIsEnd();
+
+        return responseAccuracy.getDocuments().stream()
+                .map(it -> PlaceSearchResponseDto.builder()
+                        .placeName(it.getPlaceName())
+                        .phoneNumber(it.getPhone())
+                        .roadAddress(it.getRoadAddressName())
+                        .nextToken(nextToken)
+                        .hasNext(hasNext)
+                        .placeExternalType(PlaceExternalType.KAKAO)
+                        .build())
+                .collect(Collectors.toList());
     }
 }

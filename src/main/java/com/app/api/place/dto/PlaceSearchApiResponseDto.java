@@ -1,5 +1,6 @@
 package com.app.api.place.dto;
 
+import com.app.external.place.PlaceSearchResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,14 @@ public class PlaceSearchApiResponseDto {
     private Boolean hasNext;
     private String sort;
     private List<PlaceSearchListDto> placeSearchListDtos;
+
+    public static PlaceSearchApiResponseDto of(PlaceSearchResponseDto placeSearchResponseDto) {
+        return PlaceSearchApiResponseDto.builder()
+                .placeName(StringTagUtils.removeHtmlTags(placeSearchResponseDto.getPlaceName()))
+                .roadAddress(placeSearchResponseDto.getRoadAddress())
+                .phoneNumber(placeSearchResponseDto.getPhoneNumber())
+                .build();
+    }
 
 
 }

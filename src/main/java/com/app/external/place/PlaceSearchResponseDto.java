@@ -14,5 +14,6 @@ public class PlaceSearchResponseDto {
     private String roadAddress;
     private String phoneNumber;
     private int nextToken;
+    private Boolean hasNext;
     private PlaceExternalType placeExternalType;
 }

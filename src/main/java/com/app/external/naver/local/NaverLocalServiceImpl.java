@@ -6,6 +6,8 @@ import com.app.external.place.PlaceSearchResponseDto;
 import com.app.external.place.PlaceSearchService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import com.app.global.error.ErrorCode;
+import com.app.global.error.exception.BusinessException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,19 +41,7 @@ public class NaverLocalServiceImpl implements PlaceSearchService {
                     .display(size)
                     .sort(NaverPlaceSearchOrder.정확도순.getValue())
                     .build();
-            NaverSearchKeywordDto.Response responseAccuracy = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, requestAccuracy);
-
-            int nextToken = (int) (responseAccuracy.getStart() + responseAccuracy.getDisplay());
-
-            return responseAccuracy.getItems().stream()
-                    .map(it ->PlaceSearchResponseDto.builder()
-                            .placeName(it.getTitle())
-                            .phoneNumber(it.getTelephone())
-                            .roadAddress(it.getRoadAddress())
-                            .nextToken(nextToken)
-                            .placeExternalType(PlaceExternalType.NAVER)
-                            .build())
-                    .collect(Collectors.toList());
+            return getPlaceSearchResponseDtos(requestAccuracy);
 
         } else {
             NaverSearchKeywordDto.Request requestPopular = NaverSearchKeywordDto.Request.builder()
@@ -60,19 +50,27 @@ public class NaverLocalServiceImpl implements PlaceSearchService {
                     .display(size)
                     .sort(NaverPlaceSearchOrder.인기순.getValue())
                     .build();
-            NaverSearchKeywordDto.Response responsePopular = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, requestPopular);
-
-            int nextToken = (int) (responsePopular.getStart() + responsePopular.getDisplay());
-
-            return responsePopular.getItems().stream()
-                    .map(it ->PlaceSearchResponseDto.builder()
-                            .placeName(it.getTitle())
-                            .phoneNumber(it.getTelephone())
-                            .roadAddress(it.getRoadAddress())
-                            .nextToken(nextToken)
-                            .placeExternalType(PlaceExternalType.NAVER)
-                            .build())
-                    .collect(Collectors.toList());
+            return getPlaceSearchResponseDtos(requestPopular);
         }
+    }
+
+    private List<PlaceSearchResponseDto> getPlaceSearchResponseDtos(NaverSearchKeywordDto.Request requestAccuracy) {
+        NaverSearchKeywordDto.Response responseAccuracy = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, requestAccuracy);
+        // TODO: nextToken 없는경우는? hasNext없는경우는? naver는 total값 제공
+        int nextToken = (int) (responseAccuracy.getStart() + responseAccuracy.getDisplay());
+
+        if (responseAccuracy.getTotal() < nextToken) {
+            throw new BusinessException(ErrorCode.NO_MORE_PLACE);
+        }
+
+        return responseAccuracy.getItems().stream()
+                .map(it ->PlaceSearchResponseDto.builder()
+                        .placeName(it.getTitle())
+                        .phoneNumber(it.getTelephone())
+                        .roadAddress(it.getRoadAddress())
+                        .nextToken(nextToken)
+                        .placeExternalType(PlaceExternalType.NAVER)
+                        .build())
+                .collect(Collectors.toList());
     }
 }
