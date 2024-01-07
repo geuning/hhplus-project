@@ -2,6 +2,7 @@ package com.app.external.naver.local;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class NaverSearchKeywordDto {
@@ -22,10 +23,10 @@ public class NaverSearchKeywordDto {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Response{
-        private String lastBuildDate;
-        private Long total;
-        private Long start;
-        private Long display;
+        private LocalDateTime lastBuildDate;
+        private int total;
+        private int start;
+        private int display;
         private List<Item> items;
 
         @Getter

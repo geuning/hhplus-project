@@ -57,9 +57,10 @@ public class NaverLocalServiceImpl implements PlaceSearchService {
     private List<PlaceSearchResponseDto> getPlaceSearchResponseDtos(NaverSearchKeywordDto.Request requestAccuracy) {
         NaverSearchKeywordDto.Response responseAccuracy = naverLocalClient.searchPlaceWithKeyword(naverClientId, naverSecretId, requestAccuracy);
         // TODO: nextToken 없는경우는? hasNext없는경우는? naver는 total값 제공
-        int nextToken = (int) (responseAccuracy.getStart() + responseAccuracy.getDisplay());
+        int nextToken = responseAccuracy.getStart() + responseAccuracy.getDisplay();
+        int total = responseAccuracy.getTotal();
 
-        if (responseAccuracy.getTotal() < nextToken) {
+        if (total - nextToken < 0){
             throw new BusinessException(ErrorCode.NO_MORE_PLACE);
         }
 

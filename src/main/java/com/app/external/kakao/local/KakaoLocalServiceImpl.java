@@ -52,7 +52,7 @@ public class KakaoLocalServiceImpl implements PlaceSearchService {
         KakaoSearchKeywordDto.Response responseAccuracy = kakaoLocalClient.searchPlaceWithKeyword(PREFIX_AUTHORIZATION + kakaoClientId, requestAccuracy);
 
         int nextToken = token + size;
-        Boolean hasNext = !responseAccuracy.getMeta().getIsEnd();
+        boolean hasNext = !responseAccuracy.getMeta().getIsEnd();
 
         return responseAccuracy.getDocuments().stream()
                 .map(it -> PlaceSearchResponseDto.builder()
