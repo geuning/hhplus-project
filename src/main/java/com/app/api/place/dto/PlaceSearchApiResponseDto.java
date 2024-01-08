@@ -14,16 +14,19 @@ import java.util.List;
 @NoArgsConstructor
 public class PlaceSearchApiResponseDto {
 
-    private Long nextToken;
-    private Boolean hasNext;
+    private int nextToken;
+    private boolean hasNext;
     private String sort;
     private List<PlaceSearchListDto> placeSearchListDtos;
 
-    public static PlaceSearchApiResponseDto of(PlaceSearchResponseDto placeSearchResponseDto) {
+    public static PlaceSearchApiResponseDto of(List<PlaceSearchResponseDto> placeSearchResponseDtos,
+                                               List<PlaceSearchListDto> placeSearchListDtos,
+                                               String sort) {
         return PlaceSearchApiResponseDto.builder()
-                .placeName(StringTagUtils.removeHtmlTags(placeSearchResponseDto.getPlaceName()))
-                .roadAddress(placeSearchResponseDto.getRoadAddress())
-                .phoneNumber(placeSearchResponseDto.getPhoneNumber())
+                .nextToken(placeSearchResponseDtos.get(0).getNextToken())
+                .hasNext(placeSearchResponseDtos.get(0).isHasNext())
+                .sort(sort)
+                .placeSearchListDtos(placeSearchListDtos)
                 .build();
     }
 

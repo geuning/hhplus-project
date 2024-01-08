@@ -29,6 +29,14 @@ public class SearchKeyword extends BaseEntity {
     }
 
 
+    public static SearchKeyword create(String keyword){
+        return SearchKeyword.builder()
+                .keyword(keyword)
+                .searchCount(1L)
+                .build();
+    }
+
+
 
 
 }

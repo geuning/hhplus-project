@@ -59,8 +59,16 @@ public class NaverLocalServiceImpl implements PlaceSearchService {
         // TODO: nextToken 없는경우는? hasNext없는경우는? naver는 total값 제공
         int nextToken = responseAccuracy.getStart() + responseAccuracy.getDisplay();
         int total = responseAccuracy.getTotal();
+        int start = responseAccuracy.getStart();
+        boolean hasNext;
 
-        if (total - nextToken < 0){
+        if (total < nextToken){
+            hasNext = false;
+        } else {
+            hasNext = true;
+        }
+
+        if (total < start){
             throw new BusinessException(ErrorCode.NO_MORE_PLACE);
         }
 
@@ -70,6 +78,7 @@ public class NaverLocalServiceImpl implements PlaceSearchService {
                         .phoneNumber(it.getTelephone())
                         .roadAddress(it.getRoadAddress())
                         .nextToken(nextToken)
+                        .hasNext(hasNext)
                         .placeExternalType(PlaceExternalType.NAVER)
                         .build())
                 .collect(Collectors.toList());

@@ -1,7 +1,9 @@
 package com.app.api.place.service;
 
 import com.app.api.place.dto.PlaceSearchApiResponseDto;
+import com.app.api.place.dto.PlaceSearchListDto;
 import com.app.api.place.dto.PopularSearchKeywordResponseDto;
+import com.app.domain.place.service.SearchKeywordService;
 import com.app.external.place.PlaceExternalType;
 import com.app.external.place.PlaceMediator;
 import com.app.external.place.PlaceSearchResponseDto;
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 public class PlaceSearchService {
 
     private final PlaceMediator placeMediator;
-//    private final SearchKeywordService searchKeywordService;
+    private final SearchKeywordService searchKeywordService;
 
     public PlaceSearchApiResponseDto searchPlace(String keyword, String sort, int token){
 
@@ -40,9 +42,14 @@ public class PlaceSearchService {
                 .sorted(Comparator.comparingInt(place -> place.getPlaceExternalType().getOrder()))
                 .collect(Collectors.toList());
 
-        PlaceSearchApiResponseDto result = placeSearchs.s
+        List<PlaceSearchListDto> searchList = placeSearchs.stream()
+                .map(PlaceSearchListDto::of).collect(Collectors.toList());
 
-        return null;
+        PlaceSearchApiResponseDto result = PlaceSearchApiResponseDto.of(placeSearchs, searchList, sort);
+
+        searchKeywordService.saveOrUpdateSearchCount(keyword);
+
+        return result;
     }
 
     private void validateKeyword(String keyword) {
