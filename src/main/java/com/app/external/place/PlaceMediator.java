@@ -18,6 +18,9 @@ public class PlaceMediator {
 
     // TODO: sort 거리순, 정확도순일때 네이버 카카오 어떻게 뿌려줄지
     public List<PlaceSearchResponseDto> searchPlaceWithKeyword(PlaceExternalType placeExternalType, String keyword, int token, int size, String sort){
+
+
+
         for(PlaceSearchService placeSearchService : placeSearchServiceMap.values()){
             if(placeSearchService.isMyProcess(placeExternalType)){
                 try {
