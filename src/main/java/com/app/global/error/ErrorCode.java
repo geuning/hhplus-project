@@ -9,7 +9,8 @@ public enum ErrorCode {
     SERVER_ERROR("COMMON-001", "요청을 처리하는 중 오류가 발생하였습니다. 관리자에게 문의해주세요"),
     // 장소
     INVALID_KEYWORD("PLACE-001", "장소 검색 키워드는 필수 값 입니다."),
-    NO_MORE_PLACE("PLACE-002", "더 이상 검색 결과가 없습니다.")
+    NO_MORE_PLACE("PLACE-002", "더 이상 검색 결과가 없습니다."),
+    INVALID_SEARCH_KEYWORD("PLACE-003", "존재하지 않는 키워드 입니다."),
 
     ;
 

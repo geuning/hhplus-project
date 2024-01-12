@@ -55,6 +55,7 @@ public class PlaceSearchService {
     private void validateKeyword(String keyword) {
         if(!StringUtils.hasText(keyword)) throw new BusinessException(ErrorCode.INVALID_KEYWORD);
     }
+
     public List<PopularSearchKeywordResponseDto> searchPopularKeyword(){
 
         return null;

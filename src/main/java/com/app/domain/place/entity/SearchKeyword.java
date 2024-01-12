@@ -37,6 +37,11 @@ public class SearchKeyword extends BaseEntity {
     }
 
 
+    public void updateSearchCountOne() {
+        this.searchCount += 1;
+    }
+
+
 
 
 }
