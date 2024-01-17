@@ -1,0 +1,47 @@
+version: '3'
+
+### 암호화 고민 + 깃 푸쉬 암호화 ###
+services:
+  database:
+    image: mysql
+    container_name: db_mysql
+    restart: unless-stopped
+    env_file:
+      - .env
+#    environment:
+#      MYSQL_DATABASE:
+#      MYSQL_ROOT_HOST: '%'
+#      MYSQL_ROOT_PASSWORD:
+#      TZ: 'Asia/Seoul'
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/data:/var/lib/mysql # MySQL 설정 파일 위치
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    networks:
+      - hhplus-net
+
+  application:
+    container_name: hhplus-spring
+    restart: on-failure
+    env_file:
+      - .env
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db_mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    depends_on:
+      - database
+    networks:
+      - hhplus-net
+
+networks:
+  hhplus-net:
