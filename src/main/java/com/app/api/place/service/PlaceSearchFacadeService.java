@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PlaceSearchService {
+public class PlaceSearchFacadeService {
 
     private final PlaceMediator placeMediator;
     private final SearchKeywordService searchKeywordService;
